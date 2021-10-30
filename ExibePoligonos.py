@@ -22,14 +22,12 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from Poligonos import *
-
-# ***********************************************************************************
-Mapa = Polygon()
-ConvexHull = Polygon()
+from Rua import *
+import re
 
 # Limites da Janela de Seleção
-Min = Point()
-Max = Point()
+Min = Point(0, 0)
+Max = Point(40, 40)
 
 # ***********************************************************************************
 def reshape(w,h):
@@ -48,7 +46,6 @@ def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     glColor3f(1.0, 1.0, 0.0)
-    Mapa.desenhaPoligono()
     #Mapa.desenhaVertices()
     glutSwapBuffers()
 
@@ -63,19 +60,29 @@ def keyboard(*args):
         os._exit(0)
     if args[0] == ESCAPE:
         os._exit(0)
-    if args[0] == b'p':
-        Mapa.imprimeVertices()
-    if args[0] == b'a':
-        Mapa.LePontosDeArquivo("EstadoRS.txt")
 # Força o redesenho da tela
     glutPostRedisplay()
 
+
+def LePontosDeArquivo(Nome):
+    infile = open(Nome)
+
+    for line in infile.readlines():
+        rua = Rua()
+        points = [[x[1], x[2]] for x in [x.groups() for x in re.finditer('((\d+)\,(\d+))', line)]]
+        for point in points:
+            x = int(point[0])
+            y = int(point[1])
+            rua.add(x,y)
+        
+    infile.close()
 
 # ***********************************************************************************
 # Programa Principal
 # ***********************************************************************************
 
-Min, Max = Mapa.LePontosDeArquivo("EstadoRS.txt")
+#Min, Max = Mapa.LePontosDeArquivo("curvas.txt")
+LePontosDeArquivo("curvas.txt")
 glutInit(sys.argv)
 glutInitDisplayMode(GLUT_RGBA)
 glutInitWindowSize(500, 500)
