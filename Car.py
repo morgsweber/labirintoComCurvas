@@ -11,7 +11,7 @@ class AIType(Enum):
   ENEMY = 2
 
 CAR_BODY = [Point(-1, -1), Point(-1, 1), Point(2, 0)]
-SPEED = 0.001
+SPEED = 0.1
 
 class Car:
   def __init__(self, type = AIType.ENEMY):

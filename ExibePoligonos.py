@@ -29,44 +29,14 @@ import re
 # Limites da Janela de Seleção
 Min = Point(-50, -50)
 Max = Point(50, 50)
-Player = Car(AIType.PLAYER)
 
+# Setup do jogo
+FPS = math.floor(1000/60)
+Player = Car(AIType.PLAYER)
 Roads = []
 
-# ***********************************************************************************
-def reshape(w,h):
-    glViewport(0, 0, w, h)
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
-    # Cria uma folga na Janela de Seleção, com 10% das dimensões do polígono
-    BordaX = abs(Max.x-Min.x)*0.1
-    BordaY = abs(Max.y-Min.y)*0.1
-    glOrtho(Min.x-BordaX, Max.x+BordaX, Min.y-BordaY, Max.y+BordaY, 0.0, 1.0)
-    glMatrixMode (GL_MODELVIEW)
-    glLoadIdentity()
-
-# ***********************************************************************************
-def display():
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glLoadIdentity()
-    glColor3f(1.0, 1.0, 0.0)
-    for road in Roads: road.render()
-    Player.render()
-    glutSwapBuffers()
-
-# ***********************************************************************************
-# The function called whenever a key is pressed. Note the use of Python tuples to pass in: (key, x, y)
-#ESCAPE = '\033'
-ESCAPE = b'\x1b'
-def keyboard(*args):
-    if args[0] == b'q':
-        os._exit(0)
-    if args[0] == ESCAPE:
-        os._exit(0)
-
-
-def ReadRoads(Nome):
-    infile = open(Nome)
+def readRoads():
+    infile = open("curvas.txt")
 
     for line in infile.readlines():
         points = [Point(x[1], x[2]) for x in [x.groups() for x in re.finditer('((-*\d+)\,(-*\d+))', line)]]
@@ -76,19 +46,41 @@ def ReadRoads(Nome):
 
     infile.close()
 
-def idle():
-    Player.move()
-    glutPostRedisplay()
-
-# ***********************************************************************************
-# Programa Principal
-# ***********************************************************************************
-
-ReadRoads("curvas.txt")
+readRoads()
 print("Ruas")
 [print(x) for x in Roads]
 
-Player.setStart(Roads[0], 0.5)
+Player.setStart(Roads[0], 0)
+
+def reshape(w,h):
+    glViewport(0, 0, w, h)
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    BordaX = abs(Max.x-Min.x)*0.1
+    BordaY = abs(Max.y-Min.y)*0.1
+    glOrtho(Min.x-BordaX, Max.x+BordaX, Min.y-BordaY, Max.y+BordaY, 0.0, 1.0)
+    glMatrixMode (GL_MODELVIEW)
+    glLoadIdentity()
+
+def display():
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glLoadIdentity()
+    glColor3f(1.0, 1.0, 0.0)
+    for road in Roads: road.render()
+    Player.render()
+    glutSwapBuffers()
+
+ESCAPE = b'\x1b'
+def keyboard(*args):
+    if args[0] == b'q':
+        os._exit(0)
+    if args[0] == ESCAPE:
+        os._exit(0)
+
+def idle(value):
+    Player.move()
+    glutPostRedisplay()
+    glutTimerFunc(FPS, idle, value)
 
 glutInit(sys.argv)
 glutInitDisplayMode(GLUT_RGBA)
@@ -98,7 +90,7 @@ wind = glutCreateWindow("Exibe Polignos")
 glutDisplayFunc(display)
 glutReshapeFunc(reshape)
 glutKeyboardFunc(keyboard)
-glutIdleFunc(idle)
+glutTimerFunc(FPS, idle, 0)
 
 try:
     glutMainLoop()
