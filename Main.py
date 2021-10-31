@@ -90,10 +90,19 @@ def display():
 
 ESCAPE = b'\x1b'
 def keyboard(*args):
-    if args[0] == b'q':
+    print(args[0])
+    c = args[0]
+    if c == b'q':
         os._exit(0)
-    if args[0] == ESCAPE:
+    elif c == ESCAPE:
         os._exit(0)
+    elif c == b' ':
+        Player.setSpeed()
+    elif c == b'w':
+        Player.setSpeed(Speeds.FOREWARD)
+    elif c == b's':
+        Player.setSpeed(Speeds.BACKWARD)
+
 
 def idle(value):
     Player.move()

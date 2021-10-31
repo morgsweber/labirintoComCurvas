@@ -31,6 +31,7 @@ class Road:
             y = (1 - p)**3 * self.Points[0].y + 3 * (1 - p)**2 * p * self.Points[1].y + 3 * (1 - p) * p**2 * self.Points[2].y + p**3 * self.Points[3].y
         return Vector(x,y)
 
+    # derivada dos cálculos acima
     def tangent(self, p):
         x = 0
         y = 0

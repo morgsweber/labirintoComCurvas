@@ -7,6 +7,7 @@ from enum import Enum
 import copy
 import random
 import math
+
 class AIType(Enum):
   PLAYER = 1
   ENEMY = 2
@@ -15,6 +16,11 @@ CAR_BODY = [Vector(-1, -1), Vector(1, -1), Vector(0, 2)]
 SPEED = 0.1
 SIZE = 1.5
 
+class Speeds(Enum):
+  STOP = 0
+  FOREWARD = 1
+  BACKWARD = 2
+
 class Car:
   def __init__(self, type = AIType.ENEMY):
     self.type = type
@@ -22,13 +28,24 @@ class Car:
     self.next = None
     self.vertices = copy.deepcopy(CAR_BODY)
     self.position = 0
-    self.direction = -1
-    self.moving = True
+    self.speed = SPEED
+    self.angle = 0
 
   def setStart(self, road=None, position=0):
     self.road = road
     self.position = position
-  
+
+  def setSpeed(self, speed=Speeds.STOP):
+    if(speed == Speeds.STOP):
+      self.speed = 0
+      if(self.next):
+        self.next.selected = False
+        self.next = None
+    elif(speed == Speeds.FOREWARD and self.speed == 0):
+      self.speed = SPEED
+    elif(speed == Speeds.BACKWARD and self.speed == 0):
+      self.speed = -SPEED
+
   def render(self):
     if(self.type == AIType.PLAYER): glColor3d(0, 1, 0)
     else: glColor3d(1, 0, 0)
@@ -38,9 +55,10 @@ class Car:
 
     glScale(SIZE, SIZE, 1)
 
-    direction = self.road.tangent(self.position)
-    rotation = math.degrees(math.atan2(direction.x, direction.y))
-    glRotate(-rotation + (0 if (self.direction == 1) else 180), 0, 0, 1)
+    if(self.speed != 0):
+      direction = self.road.tangent(self.position)
+      self.angle = -math.degrees(math.atan2(direction.x, direction.y)) + (0 if (self.speed > 0) else 180)
+    glRotate(self.angle, 0, 0, 1)
 
     glBegin(GL_POLYGON)
     [glVertex3f(p.x, p.y, 0) for p in self.vertices]
@@ -48,9 +66,12 @@ class Car:
     glPopMatrix()
 
   def move(self):
-    movement = SPEED * self.direction
-    self.position += movement / self.road.length
-    if(self.direction == 1):
+    if(self.speed == 0): 
+      return
+
+    self.position += self.speed / self.road.length
+
+    if(self.speed > 0):
       if(self.position > 0.5 and self.next == None): 
         self.chooseNext()
       elif(self.position > 1):
@@ -68,7 +89,7 @@ class Car:
         if(self.type == AIType.PLAYER): self.road.selected = False
 
   def chooseNext(self):
-    if(self.direction == 1):
+    if(self.speed > 0):
       size = len(self.road.connectedForeward)
       next = random.randint(0, size-1)
       self.next = list(self.road.connectedForeward)[next]
@@ -80,4 +101,4 @@ class Car:
     if(self.type == AIType.PLAYER): self.next.selected = True
 
   def __str__(self):
-    return f"Road: {self.road}\nNext: {self.next}\nPosition: {self.position}\nMoving: {self.moving}\nDirection: {self.direction}\nType: {self.type}"
+    return f"Road: {self.road}\nNext: {self.next}\nPosition: {self.position}\nSpeed: {self.speed}\nType: {self.type}"
