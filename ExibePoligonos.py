@@ -54,42 +54,33 @@ def display():
 #ESCAPE = '\033'
 ESCAPE = b'\x1b'
 def keyboard(*args):
-    #print (args)
-    # If escape is pressed, kill everything.
     if args[0] == b'q':
         os._exit(0)
     if args[0] == ESCAPE:
         os._exit(0)
-# Força o redesenho da tela
     glutPostRedisplay()
 
 
-def LePontosDeArquivo(Nome):
+def ReadRoads(Nome):
     infile = open(Nome)
 
     for line in infile.readlines():
-        rua = Rua()
         points = [[x[1], x[2]] for x in [x.groups() for x in re.finditer('((\d+)\,(\d+))', line)]]
-        for point in points:
-            x = int(point[0])
-            y = int(point[1])
-            rua.add(x,y)
-        
+        rua = Rua([Point(p[0], p[1]) for p in points])
+
     infile.close()
 
 # ***********************************************************************************
 # Programa Principal
 # ***********************************************************************************
 
-#Min, Max = Mapa.LePontosDeArquivo("curvas.txt")
-LePontosDeArquivo("curvas.txt")
+ReadRoads("curvas.txt")
 glutInit(sys.argv)
 glutInitDisplayMode(GLUT_RGBA)
 glutInitWindowSize(500, 500)
 glutInitWindowPosition(100, 100)
 wind = glutCreateWindow("Exibe Polignos")
 glutDisplayFunc(display)
-#glutIdleFunc(showScreen)
 glutReshapeFunc(reshape)
 glutKeyboardFunc(keyboard)
 
