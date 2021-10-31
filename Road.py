@@ -2,8 +2,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from Point import *
-import copy
-import math
+import copyfile
 
 RESOLUTION = 20
 
@@ -17,9 +16,7 @@ class Road:
         self.bottomRight = Point(0,0)
         self.connectedForeward = []
         self.connectedBackward = []
-    
-    def distance(self, a, b):
-        return math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2)
+        self.calculateLength()
 
     # matemática do site https://javascript.info/bezier-curve
     def getPoint(self, position):
@@ -39,24 +36,33 @@ class Road:
     def render(self):
         delta = 1.0 / RESOLUTION
         position = delta
-        length = 0
         glLineWidth(2)
         glColor3d(0.7, 0.7, 0.7)
         glBegin(GL_LINE_STRIP)
-        P1 = self.getPoint(0.0)
-        glVertex3f(P1.x, P1.y, 0)
+        point = self.getPoint(0.0)
+        glVertex3f(point.x, point.y, 0)
 
         while(position < 1.0):
+            point = self.getPoint(position)
+            glVertex3f(point.x, point.y, 0)
+            position += delta
+
+        point = self.getPoint(1.0)
+        glVertex3f(point.x, point.y, 0)
+        glEnd()
+
+    def calculateLength(self):
+        delta = 1.0 / RESOLUTION
+        position = delta
+        P1 = self.getPoint(0.0)
+        while(position < 1.0):
             P2 = self.getPoint(position)
-            glVertex3f(P2.x, P2.y, 0)
-            length += self.distance(P1,P2)
+            self.length += P1.distance(P2)
             P1 = P2
             position += delta
 
         P2 = self.getPoint(1.0)
-        glVertex3f(P2.x, P2.y, 0)
-        length += self.distance(P1,P2)
-        glEnd()
+        self.length += P1.distance(P2)
 
     def setConnections(self, forewards = [], backwards = []):
         self.connectedForeward = forewards

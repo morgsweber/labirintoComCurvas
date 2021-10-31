@@ -63,7 +63,6 @@ def keyboard(*args):
         os._exit(0)
     if args[0] == ESCAPE:
         os._exit(0)
-    glutPostRedisplay()
 
 
 def ReadRoads(Nome):
@@ -76,6 +75,10 @@ def ReadRoads(Nome):
         Roads += [rua]
 
     infile.close()
+
+def idle():
+    Player.move()
+    glutPostRedisplay()
 
 # ***********************************************************************************
 # Programa Principal
@@ -95,6 +98,7 @@ wind = glutCreateWindow("Exibe Polignos")
 glutDisplayFunc(display)
 glutReshapeFunc(reshape)
 glutKeyboardFunc(keyboard)
+glutIdleFunc(idle)
 
 try:
     glutMainLoop()
