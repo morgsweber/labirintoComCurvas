@@ -26,8 +26,8 @@ from Road import *
 import re
 
 # Limites da Janela de Seleção
-Min = Point(0, 0)
-Max = Point(40, 40)
+Min = Point(-5, -5)
+Max = Point(5, 5)
 
 Roads = []
 
@@ -48,7 +48,7 @@ def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     glColor3f(1.0, 1.0, 0.0)
-    #Mapa.desenhaVertices()
+    for road in Roads: road.render()
     glutSwapBuffers()
 
 # ***********************************************************************************
@@ -67,7 +67,7 @@ def ReadRoads(Nome):
     infile = open(Nome)
 
     for line in infile.readlines():
-        points = [Point(x[1], x[2]) for x in [x.groups() for x in re.finditer('((\d+)\,(\d+))', line)]]
+        points = [Point(x[1], x[2]) for x in [x.groups() for x in re.finditer('((-*\d+)\,(-*\d+))', line)]]
         rua = Road(points)
         global Roads
         Roads += [rua]
