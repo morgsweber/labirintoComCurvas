@@ -41,7 +41,7 @@ class Road:
         position = delta
         length = 0
         glLineWidth(2)
-        glColor3d(0, 1, 0)
+        glColor3d(0.7, 0.7, 0.7)
         glBegin(GL_LINE_STRIP)
         P1 = self.getPoint(0.0)
         glVertex3f(P1.x, P1.y, 0)

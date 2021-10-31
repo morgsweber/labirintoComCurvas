@@ -19,14 +19,18 @@ CAR_BODY = [Point(-1, -1), Point(-1, 1), Point(2, 0)]
 SPEED = 0.1
 
 class Car:
-  def __init__(self, type = AIType.ENEMY, rua = None, position = 0):
+  def __init__(self, type = AIType.ENEMY):
     self.type = type
-    self.Road = rua
+    self.Road = None
     self.next = None
     self.Vertices = copy.deepcopy(CAR_BODY)
-    self.position = position
+    self.position = 0
     self.direction = Direction.FOREWARD
     self.moving = True
+
+  def setStart(self, road=None, position=0):
+    self.Road = road
+    self.position = position
   
   def render(self):
     glLineWidth(2)

@@ -23,11 +23,13 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from Poligonos import *
 from Road import *
+from Car import *
 import re
 
 # Limites da Janela de Seleção
-Min = Point(-5, -5)
-Max = Point(5, 5)
+Min = Point(-50, -50)
+Max = Point(50, 50)
+Player = Car(AIType.PLAYER)
 
 Roads = []
 
@@ -49,6 +51,7 @@ def display():
     glLoadIdentity()
     glColor3f(1.0, 1.0, 0.0)
     for road in Roads: road.render()
+    Player.render()
     glutSwapBuffers()
 
 # ***********************************************************************************
@@ -81,6 +84,8 @@ def ReadRoads(Nome):
 ReadRoads("curvas.txt")
 print("Ruas")
 [print(x) for x in Roads]
+
+Player.setStart(Roads[0], 0.5)
 
 glutInit(sys.argv)
 glutInitDisplayMode(GLUT_RGBA)
