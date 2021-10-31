@@ -7,9 +7,8 @@
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-from Point import *
+from Vector import *
 import copy
-
 
 class Polygon:
 
@@ -24,7 +23,7 @@ class Polygon:
     #    self.Vertices += [temp]
 
     def insereVertice(self, x, y, z):
-        self.Vertices += [Point(x,y,z)]
+        self.Vertices += [Vector(x,y,z)]
 
     def desenhaPoligono(self):
         #print ("Desenha Poligono - Tamanho:", len(self.Vertices))
@@ -70,7 +69,7 @@ class Polygon:
 # ***********************************************************************************
     def LePontosDeArquivo(self, Nome):
         
-        Pt = Point()
+        Pt = Vector()
         infile = open(Nome)
         line = infile.readline()
         number = int(line)

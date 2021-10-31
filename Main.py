@@ -27,19 +27,20 @@ from Car import *
 import re
 
 # Limites da Janela de Seleção
-Min = Point(-50, -50)
-Max = Point(50, 50)
+Min = Vector(-50, -50)
+Max = Vector(50, 50)
 
 # Setup do jogo
 FPS = math.floor(1000/60)
 Player = Car(AIType.PLAYER)
 Roads = []
 
+
 def readRoads():
     infile = open("curvas.txt")
 
     for line in infile.readlines():
-        points = [Point(x[1], x[2]) for x in [x.groups() for x in re.finditer('((-*\d+)\,(-*\d+))', line)]]
+        points = [Vector(x[1], x[2]) for x in [x.groups() for x in re.finditer('((-*\d+)\,(-*\d+))', line)]]
         rua = Road(points)
         global Roads
         Roads += [rua]

@@ -2,15 +2,16 @@ from re import S
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-from Point import *
+from Vector import *
 from enum import Enum
 import copy
 import random
+import math
 class AIType(Enum):
   PLAYER = 1
   ENEMY = 2
 
-CAR_BODY = [Point(-1, -1), Point(-1, 1), Point(2, 0)]
+CAR_BODY = [Vector(-2, -2), Vector(2, -2), Vector(0, 4)]
 SPEED = 0.1
 
 class Car:
@@ -20,7 +21,7 @@ class Car:
     self.next = None
     self.Vertices = copy.deepcopy(CAR_BODY)
     self.position = 0
-    self.direction = 1
+    self.direction = -1
     self.moving = True
 
   def setStart(self, road=None, position=0):
@@ -32,15 +33,20 @@ class Car:
     else: glColor3d(1, 0, 0)
     glPushMatrix()
     point = self.Road.getPoint(self.position)
-    # glRotate()
     glTranslate(point.x, point.y, 0)
+
+    direction = self.Road.tangent(self.position)
+    rotation = math.degrees(math.atan2(direction.x, direction.y))
+    glRotate(-rotation + (0 if (self.direction == 1) else 180), 0, 0, 1)
+
     glBegin(GL_POLYGON)
     [glVertex3f(p.x, p.y, 0) for p in self.Vertices]
     glEnd()
     glPopMatrix()
 
   def move(self):
-    self.position += SPEED * self.direction / self.Road.length
+    movement = SPEED * self.direction
+    self.position += movement / self.Road.length
     if(self.direction == 1):
       if(self.position > 0.5 and self.next == None): 
         self.chooseNext()

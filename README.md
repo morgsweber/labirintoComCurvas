@@ -10,8 +10,8 @@ Tasks
 * [leo] [done] Modelar classe carro com curva que ele se encontra, posição na curva, direção (do primeiro ponto ao último ou ao contrário, podemos chamar de cima baixo) e tipo do carro (player ou I.A)
 * [leo] [done] Método para desenhar o carro (pensei em ser um triagulo simples), o carro se encontra no ponto x da curva com a rotação na tangente da curva (mds que complicado, acho que precisa derivar) e apontando para direção y
 * [leo] [done] Método para o carro se mover, em velocidade constante podendo ir para frente ou para tras, sincronizando a sua  dreção
-* [leo] [active] Estrutura e lógica para descrever conexões
-* [leo] [active] Decisão de próxima curva, é aleatório e é decidido ao carro chegar no meio da curva, precisando de mais um método para definir o que é o meio da curva e ao ter a curva decidida, pintar ela caso for o carro do jogador
+* [leo] [done] Estrutura e lógica para descrever conexões
+* [leo] [done] Decisão de próxima curva, é aleatório e é decidido ao carro chegar no meio da curva, precisando de mais um método para definir o que é o meio da curva e ao ter a curva decidida, pintar ela caso for o carro do jogador
 * [leo] Controles de usuário, espaço para parar e mover, outra tecla para trocar de curva escolhida
 
 -- Enemies --
