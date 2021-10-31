@@ -12,7 +12,8 @@ Tasks
 * [leo] [done] Método para o carro se mover, em velocidade constante podendo ir para frente ou para tras, sincronizando a sua  dreção
 * [leo] [done] Estrutura e lógica para descrever conexões
 * [leo] [done] Decisão de próxima curva, é aleatório e é decidido ao carro chegar no meio da curva, precisando de mais um método para definir o que é o meio da curva e ao ter a curva decidida, pintar ela caso for o carro do jogador
-* [leo] Controles de usuário, espaço para parar e mover, outra tecla para trocar de curva escolhida
+* [leo] [done] colorir próxima curva escolhida pelo jogador
+* [leo] [active] Controles de usuário, espaço para parar e mover, outra tecla para trocar de curva escolhida
 
 -- Enemies --
 * colisão

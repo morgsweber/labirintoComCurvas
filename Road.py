@@ -8,6 +8,7 @@ RESOLUTION = 20
 class Road:
     def __init__(self, points = []):
         self.Points = points
+        self.selected = False
         self.order = len(self.Points)
         self.length = 0
         # calcula as coordenadas de bounding box
@@ -45,7 +46,8 @@ class Road:
         delta = 1.0 / RESOLUTION
         position = delta
         glLineWidth(2)
-        glColor3d(0.7, 0.7, 0.7)
+        if(self.selected): glColor3d(0.9, 0.9, 0)
+        else: glColor3d(0.7, 0.7, 0.7)
         glBegin(GL_LINE_STRIP)
         point = self.getPoint(0.0)
         glVertex3f(point.x, point.y, 0)

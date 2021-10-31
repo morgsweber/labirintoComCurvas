@@ -61,6 +61,7 @@ class Car:
         self.Road = self.next
         self.position = 1
         self.next = None
+        self.Road.selected = False
 
   def chooseNext(self):
     if(self.direction == 1):
@@ -71,6 +72,7 @@ class Car:
       size = len(self.Road.connectedBackward)
       next = random.randint(0, size-1)
       self.next = list(self.Road.connectedBackward)[next]
+    self.next.selected = True
 
   def __str__(self):
     return f"Road: {self.Road}\nNext: {self.next}\nPosition: {self.position}\nMoving: {self.moving}\nDirection: {self.direction}\nType: {self.type}"
