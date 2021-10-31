@@ -29,6 +29,8 @@ import re
 Min = Point(0, 0)
 Max = Point(40, 40)
 
+Ruas = []
+
 # ***********************************************************************************
 def reshape(w,h):
     glViewport(0, 0, w, h)
@@ -67,6 +69,8 @@ def ReadRoads(Nome):
     for line in infile.readlines():
         points = [[x[1], x[2]] for x in [x.groups() for x in re.finditer('((\d+)\,(\d+))', line)]]
         rua = Rua([Point(p[0], p[1]) for p in points])
+        global Ruas
+        Ruas += [rua]
 
     infile.close()
 
@@ -75,6 +79,9 @@ def ReadRoads(Nome):
 # ***********************************************************************************
 
 ReadRoads("curvas.txt")
+print("Ruas")
+[print(x) for x in Ruas]
+
 glutInit(sys.argv)
 glutInitDisplayMode(GLUT_RGBA)
 glutInitWindowSize(500, 500)

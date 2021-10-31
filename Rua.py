@@ -55,7 +55,7 @@ class Rua:
         glEnd()
 
     def __str__(self):
-        return (self.Points, self.length, self.topLeft, self.bottomRight)
+        return f"({[str(x) for x in self.Points]}, {self.length}, {self.topLeft}, {self.bottomRight})"
 
     def getLimits(self):
         Min = copy.deepcopy(self.Points[0])
