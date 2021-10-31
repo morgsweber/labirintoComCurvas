@@ -32,6 +32,7 @@ class Car:
     else: glColor3d(1, 0, 0)
     glPushMatrix()
     point = self.Road.getPoint(self.position)
+    # glRotate()
     glTranslate(point.x, point.y, 0)
     glBegin(GL_POLYGON)
     [glVertex3f(p.x, p.y, 0) for p in self.Vertices]

@@ -13,3 +13,7 @@ Tasks
 * [leo] [active] Estrutura e lógica para descrever conexões
 * [leo] [active] Decisão de próxima curva, é aleatório e é decidido ao carro chegar no meio da curva, precisando de mais um método para definir o que é o meio da curva e ao ter a curva decidida, pintar ela caso for o carro do jogador
 * [leo] Controles de usuário, espaço para parar e mover, outra tecla para trocar de curva escolhida
+
+-- Enemies --
+* colisão
+* 
