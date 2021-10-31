@@ -22,14 +22,14 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from Poligonos import *
-from Rua import *
+from Road import *
 import re
 
 # Limites da Janela de Seleção
 Min = Point(0, 0)
 Max = Point(40, 40)
 
-Ruas = []
+Roads = []
 
 # ***********************************************************************************
 def reshape(w,h):
@@ -67,10 +67,10 @@ def ReadRoads(Nome):
     infile = open(Nome)
 
     for line in infile.readlines():
-        points = [[x[1], x[2]] for x in [x.groups() for x in re.finditer('((\d+)\,(\d+))', line)]]
-        rua = Rua([Point(p[0], p[1]) for p in points])
-        global Ruas
-        Ruas += [rua]
+        points = [Point(x[1], x[2]) for x in [x.groups() for x in re.finditer('((\d+)\,(\d+))', line)]]
+        rua = Road(points)
+        global Roads
+        Roads += [rua]
 
     infile.close()
 
@@ -80,7 +80,7 @@ def ReadRoads(Nome):
 
 ReadRoads("curvas.txt")
 print("Ruas")
-[print(x) for x in Ruas]
+[print(x) for x in Roads]
 
 glutInit(sys.argv)
 glutInitDisplayMode(GLUT_RGBA)

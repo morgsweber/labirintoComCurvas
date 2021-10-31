@@ -5,9 +5,9 @@ from Point import *
 import copy
 import math
 
-class Rua:
-    _RESOLUTION = 20
-    
+RESOLUTION = 20
+
+class Road:
     def __init__(self, points = []):
         self.Points = points
         self.order = len(self.Points)
@@ -15,6 +15,8 @@ class Rua:
         # calcula as coordenadas de bounding box
         self.topLeft = Point(0,0)
         self.bottomRight = Point(0,0)
+        self.connectedForeward = []
+        self.connectedBackward = []
     
     def distance(self, a, b):
         return math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2)
@@ -54,8 +56,12 @@ class Rua:
         length += self.distance(P1,P2)
         glEnd()
 
+    def setConnections(self, forewards = [], backwards = []):
+        self.connectedForeward = forewards
+        self.connectedBackward = backwards
+
     def __str__(self):
-        return f"({[str(x) for x in self.Points]}, {self.length}, {self.topLeft}, {self.bottomRight})"
+        return f"Points: {[str(x) for x in self.Points]}\nLength: {self.length}\nTopLeft:{self.topLeft}\nBottomRight: {self.bottomRight}"
 
     def getLimits(self):
         Min = copy.deepcopy(self.Points[0])
