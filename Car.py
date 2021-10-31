@@ -41,13 +41,20 @@ class Car:
 
   def move(self):
     self.position += SPEED * self.direction / self.Road.length
-    if(self.position > 0.5 and self.next == None): 
-      self.chooseNext()
-    elif(self.position > 1):
-      self.Road = self.next
-      self.position = 0
-      self.next = None
-
+    if(self.direction == 1):
+      if(self.position > 0.5 and self.next == None): 
+        self.chooseNext()
+      elif(self.position > 1):
+        self.Road = self.next
+        self.position = 0
+        self.next = None
+    else:
+      if(self.position < 0.5 and self.next == None): 
+        self.chooseNext()
+      elif(self.position < 0):
+        self.Road = self.next
+        self.position = 1
+        self.next = None
 
   def chooseNext(self):
     if(self.direction == 1):
@@ -60,4 +67,4 @@ class Car:
       self.next = list(self.Road.connectedBackward)[next]
 
   def __str__(self):
-    return f"Road: {self.Road}\nNext: {self.next}\nPosition:{self.position}\nMoving: {self.moving}\nDirection {self.direction}\nType {self.type}"
+    return f"Road: {self.Road}\nNext: {self.next}\nPosition: {self.position}\nMoving: {self.moving}\nDirection: {self.direction}\nType: {self.type}"
