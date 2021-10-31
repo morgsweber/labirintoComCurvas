@@ -7,6 +7,9 @@ class Point:
 	def __str__(self): 
 		return f"({self.x}, {self.y})"
 
+	def __eq__(self, obj):
+		return self.x == obj.x and self.y == obj.y
+
 	def distance(self, point):
 		return math.sqrt((self.x - point.x)**2 + (self.y - point.y)**2)
 

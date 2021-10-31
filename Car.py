@@ -45,20 +45,19 @@ class Car:
       self.chooseNext()
     elif(self.position > 1):
       self.Road = self.next
-      self.position = self.direction + 1 / 2
+      self.position = 0
       self.next = None
 
 
   def chooseNext(self):
-    return
     if(self.direction == 1):
       size = len(self.Road.connectedForeward)
       next = random.randint(0, size-1)
-      self.next = self.Road.connectedForeward[next]
+      self.next = list(self.Road.connectedForeward)[next]
     else:
       size = len(self.Road.connectedBackward)
       next = random.randint(0, size-1)
-      self.next = self.Road.connectedBackward[next]
+      self.next = list(self.Road.connectedBackward)[next]
 
   def __str__(self):
     return f"Road: {self.Road}\nNext: {self.next}\nPosition:{self.position}\nMoving: {self.moving}\nDirection {self.direction}\nType {self.type}"

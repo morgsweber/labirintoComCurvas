@@ -11,11 +11,12 @@ class Road:
         self.order = len(self.Points)
         self.length = 0
         # calcula as coordenadas de bounding box
-        self.topLeft = Point(0,0)
-        self.bottomRight = Point(0,0)
-        self.connectedForeward = []
-        self.connectedBackward = []
+        self.connectedForeward = set()
+        self.connectedBackward = set()
         self.calculateLength()
+
+    def firstPoint(self): return self.Points[0]
+    def lastPoint(self): return self.Points[self.order - 1]
 
     # matemática do site https://javascript.info/bezier-curve
     def getPoint(self, position):
@@ -63,9 +64,5 @@ class Road:
         P2 = self.getPoint(1.0)
         self.length += P1.distance(P2)
 
-    def setConnections(self, forewards = [], backwards = []):
-        self.connectedForeward = forewards
-        self.connectedBackward = backwards
-
     def __str__(self):
-        return f"Points: {[str(x) for x in self.Points]}\nLength: {self.length}\nTopLeft:{self.topLeft}\nBottomRight: {self.bottomRight}"
+        return f"Points: {[str(x) for x in self.Points]}\nLength: {self.length}\nForeward: {len(self.connectedForeward)}\nBackward: {len(self.connectedBackward)}"

@@ -46,11 +46,28 @@ def readRoads():
 
     infile.close()
 
+def connectRoads():
+    for road in Roads:
+        foreward = road.lastPoint()
+        backward = road.firstPoint()
+        for next in Roads:
+            nextForeward = next.lastPoint()
+            nextBackward = next.firstPoint()
+            if(foreward == nextBackward):
+                road.connectedForeward.add(next)
+                next.connectedBackward.add(road)
+            if(backward == nextForeward):
+                road.connectedBackward.add(next)
+                next.connectedForeward.add(road)
+
 readRoads()
+connectRoads()
 print("Ruas")
 [print(x) for x in Roads]
 
 Player.setStart(Roads[0], 0)
+print("Player")
+print(Player)
 
 def reshape(w,h):
     glViewport(0, 0, w, h)
