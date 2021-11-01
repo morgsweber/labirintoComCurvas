@@ -75,16 +75,18 @@ class Car:
       if(self.position > 0.5 and self.next == None): 
         self.chooseNext()
       elif(self.position > 1):
-        self.road = self.next
-        self.position = 0
+        self.road = self.next.road
+        self.speed *= self.next.bias
+        self.position = 0 if self.next.bias == 1 else 1
         self.next = None
         if(self.type == AIType.PLAYER): self.road.selected = False
     else:
       if(self.position < 0.5 and self.next == None): 
         self.chooseNext()
       elif(self.position < 0):
-        self.road = self.next
-        self.position = 1
+        self.road = self.next.road
+        self.speed *= self.next.bias
+        self.position = 1 if self.next.bias == 1 else 0
         self.next = None
         if(self.type == AIType.PLAYER): self.road.selected = False
 
@@ -92,13 +94,38 @@ class Car:
     if(self.speed > 0):
       size = len(self.road.connectedForeward)
       next = random.randint(0, size-1)
-      self.next = list(self.road.connectedForeward)[next]
+      self.next = self.road.connectedForeward[next]
     else:
       size = len(self.road.connectedBackward)
       next = random.randint(0, size-1)
-      self.next = list(self.road.connectedBackward)[next]
+      self.next = self.road.connectedBackward[next]
     
-    if(self.type == AIType.PLAYER): self.next.selected = True
+    if(self.type == AIType.PLAYER): self.next.road.selected = True
+
+  def cicleRoads(self, clockwise=True):
+    if(self.next):
+      current = 0
+      size = 0
+      if(self.speed > 0):
+        size = len(self.road.connectedForeward)
+        current = self.road.connectedForeward.index(self.next)
+
+      else:
+        size = len(self.road.connectedBackward)
+        current = self.road.connectedBackward.index(self.next)
+      
+      current += 1 if clockwise else -1
+      if(current >= size):
+        current = 0
+      elif(current < 0):
+        current = size - 1
+
+      self.next.road.selected = False
+      if(self.speed > 0):
+        self.next = self.road.connectedForeward[current]
+      else:
+        self.next = self.road.connectedBackward[current]
+      self.next.road.selected = True
 
   def __str__(self):
     return f"Road: {self.road}\nNext: {self.next}\nPosition: {self.position}\nSpeed: {self.speed}\nType: {self.type}"

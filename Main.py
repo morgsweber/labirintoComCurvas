@@ -21,6 +21,7 @@
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
+from Connection import Connection
 from Poligonos import *
 from Road import *
 from Car import *
@@ -34,7 +35,6 @@ Max = Vector(50, 50)
 FPS = math.floor(1000/60)
 Player = Car(AIType.PLAYER)
 Roads = []
-
 
 def readRoads():
     infile = open("curvas.txt")
@@ -52,14 +52,34 @@ def connectRoads():
         foreward = road.lastPoint()
         backward = road.firstPoint()
         for next in Roads:
-            nextForeward = next.lastPoint()
-            nextBackward = next.firstPoint()
-            if(foreward == nextBackward):
-                road.connectedForeward.add(next)
-                next.connectedBackward.add(road)
-            if(backward == nextForeward):
-                road.connectedBackward.add(next)
-                next.connectedForeward.add(road)
+            if(road != next):
+                nextForeward = next.lastPoint()
+                nextBackward = next.firstPoint()
+                # if found --> O --> (saída de um para entrada de outro)
+                # addiciona conexões convencionais para ambas ruas
+                if(foreward == nextBackward):
+                    Connection(road).addToBackward(next)
+                    Connection(next).addToForeward(road)
+
+                # if found --> O <-- (saída de um para saída de outro)
+                # addiciona conexões invertidas para ambas ruas
+                if(foreward == nextForeward):
+                    Connection(road, True).addToBackward(next)
+                    Connection(next, True).addToBackward(road)
+                    
+                # if found <-- O <-- (entrada de um para saída de outro)
+                # addiciona conexões convencionais para ambas ruas
+                if(backward == nextForeward):
+                    Connection(road).addToForeward(next)
+                    Connection(next).addToBackward(road)
+
+                # if found <-- O --> (entrada de um para entrada de outro)
+                # addiciona conexões invertidas para ambas ruas
+                if(backward == nextBackward):
+                    Connection(road, True).addToForeward(next)
+                    Connection(next, True).addToForeward(road)
+                
+
 
 readRoads()
 connectRoads()
@@ -92,9 +112,7 @@ ESCAPE = b'\x1b'
 def keyboard(*args):
     print(args[0])
     c = args[0]
-    if c == b'q':
-        os._exit(0)
-    elif c == ESCAPE:
+    if c == ESCAPE:
         os._exit(0)
     elif c == b' ':
         Player.setSpeed()
@@ -102,7 +120,10 @@ def keyboard(*args):
         Player.setSpeed(Speeds.FOREWARD)
     elif c == b's':
         Player.setSpeed(Speeds.BACKWARD)
-
+    elif c == b'a':
+        Player.cicleRoads(False)
+    elif c == b'd':
+        Player.cicleRoads(True)
 
 def idle(value):
     Player.move()

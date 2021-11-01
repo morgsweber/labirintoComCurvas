@@ -12,8 +12,8 @@ class Road:
         self.order = len(self.Points)
         self.length = 0
         # calcula as coordenadas de bounding box
-        self.connectedForeward = set()
-        self.connectedBackward = set()
+        self.connectedForeward = []
+        self.connectedBackward = []
         self.calculateLength()
 
     def firstPoint(self): return self.Points[0]
