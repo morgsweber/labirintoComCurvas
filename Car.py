@@ -45,7 +45,7 @@ class Car:
     if(speed == Speeds.STOP):
       self.speed = 0
       if(self.next):
-        self.next.selected = False
+        self.next.road.selected = False
         self.next = None
     elif(speed == Speeds.FOREWARD and self.speed == 0):
       self.speed = SPEED
