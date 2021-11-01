@@ -38,6 +38,7 @@ ENEMIES = 2
 Player = Car(AIType.PLAYER)
 Enemies = [Car() for x in range(ENEMIES)]
 Roads = []
+colisions = 0
 
 def readRoads():
     infile = open("curvas.txt")
@@ -103,7 +104,9 @@ def display():
 
 def checkCollision():
     if(any([abs(car.length - Player.length) < 1 for car in Player.road.cars])):
-        print("Colisão detectada")
+        global colisions
+        colisions += 1
+        print(f"colision {colisions}")
 
 ESCAPE = b'\x1b'
 def keyboard(*args):

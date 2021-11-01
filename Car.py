@@ -52,6 +52,14 @@ class Car:
     elif(speed == Speeds.BACKWARD and self.speed == 0):
       self.speed = -SPEED
 
+  def setNext(self, connection):
+    if(self.type == AIType.PLAYER): 
+      if(self.next): self.next.road.selected = False
+      self.next = connection
+      self.next.road.selected = True
+    else:
+      self.next = connection
+
   def render(self):
     if(not self.inScene): return
 
@@ -117,13 +125,11 @@ class Car:
     if(self.speed > 0):
       size = len(self.road.connectedForeward)
       next = random.randint(0, size-1)
-      self.next = self.road.connectedForeward[next]
+      self.setNext(self.road.connectedForeward[next])
     else:
       size = len(self.road.connectedBackward)
       next = random.randint(0, size-1)
-      self.next = self.road.connectedBackward[next]
-    
-    if(self.type == AIType.PLAYER): self.next.road.selected = True
+      self.setNext(self.road.connectedBackward[next])
 
   def cicleRoads(self, clockwise=True):
     if(self.next):
@@ -143,12 +149,10 @@ class Car:
       elif(current < 0):
         current = size - 1
 
-      self.next.road.selected = False
       if(self.speed > 0):
-        self.next = self.road.connectedForeward[current]
+        self.setNext(self.road.connectedForeward[current])
       else:
-        self.next = self.road.connectedBackward[current]
-      self.next.road.selected = True
+        self.setNext(self.road.connectedBackward[current])
 
   def __str__(self):
     return f"Road: {self.road}\nNext: {self.next}\nPosition: {self.position}\nSpeed: {self.speed}\nType: {self.type}\nAngle: {self.angle}\nInScene: {self.inScene}"
