@@ -101,6 +101,10 @@ def display():
     for enemy in Enemies: enemy.render()
     glutSwapBuffers()
 
+def checkCollision():
+    if(any([abs(car.position - Player.position) < 0.01] for car in Player.road.cars)):
+        print("Colisão detectada")
+
 ESCAPE = b'\x1b'
 def keyboard(*args):
     print(args[0])
@@ -121,9 +125,9 @@ def keyboard(*args):
 def idle(value):
     Player.move()
     for enemy in Enemies: enemy.move()
+    # checkCollision()
     glutPostRedisplay()
     glutTimerFunc(FPS, idle, value)
-
 
 readRoads()
 connectRoads()

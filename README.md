@@ -6,7 +6,7 @@ Tasks
 * [leo e morg] [done] Ler arquivo de definição de curvas
 * [leo] [done] Instanciar ruas com base no arquivo de curvas
 * [morg] Obter bounding box de curva bezier (não é tão simples como no políono) e calcular o máximo e mínimo para dar um tamanho para tela
-* [morg] Estrutura de ruas no arquivo para conter 20 ruas, sendo 8 bifurcações, 8 trifurcações e o resto de conexões + ou - né, não precisa ser tão louco nisso
+* [morg] Estrutura de ruas no arquivo para conter 30 ruas, sendo 8 bifurcações, 8 trifurcações e o resto de conexões + ou - né, não precisa ser tão louco nisso
 
 -- Carro --
 * [leo] [done] Modelar classe carro com curva que ele se encontra, posição na curva, direção (do primeiro ponto ao último ou ao contrário, podemos chamar de cima baixo) e tipo do carro (player ou I.A)

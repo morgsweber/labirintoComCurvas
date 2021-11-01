@@ -37,6 +37,8 @@ class Car:
     self.road = road
     self.speed = SPEED * 1 if foreward else -1
     self.position = position
+    if(self.type ==  AIType.ENEMY): 
+      self.road.cars.add(self)
 
   def setSpeed(self, speed=Speeds.STOP):
     if(speed == Speeds.STOP):
@@ -86,11 +88,9 @@ class Car:
         self.chooseNext()
       elif(self.position > 1):
         # momento de mover para próxima curva
-        self.road = self.next.road
-        self.speed *= self.next.bias
         self.position = 0 if self.next.bias == 1 else 1
-        self.next = None
-        if(self.type == AIType.PLAYER): self.road.selected = False
+        self.changeRoad()
+
     # se esta indo para tras
     else:
       # momento de escolher próxima curva
@@ -98,11 +98,18 @@ class Car:
         self.chooseNext()
       elif(self.position < 0):
         # momento de mover para próxima curva
-        self.road = self.next.road
-        self.speed *= self.next.bias
         self.position = 1 if self.next.bias == 1 else 0
-        self.next = None
-        if(self.type == AIType.PLAYER): self.road.selected = False
+        self.changeRoad()
+
+  def changeRoad(self):
+    if(self.type == AIType.ENEMY): 
+      self.next.road.cars.add(self)
+      self.road.cars.remove(self)
+
+    self.road = self.next.road
+    self.speed *= self.next.bias
+    self.next = None
+    if(self.type == AIType.PLAYER): self.road.selected = False
 
   def chooseNext(self):
     if(self.speed > 0):
