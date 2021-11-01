@@ -26,6 +26,7 @@ from Poligonos import *
 from Road import *
 from Car import *
 import re
+import random
 
 # Limites da Janela de Seleção
 Min = Vector(-50, -50)
@@ -33,7 +34,9 @@ Max = Vector(50, 50)
 
 # Setup do jogo
 FPS = math.floor(1000/60)
+ENEMIES = 2
 Player = Car(AIType.PLAYER)
+Enemies = [Car() for x in range(ENEMIES)]
 Roads = []
 
 def readRoads():
@@ -78,17 +81,6 @@ def connectRoads():
                 if(backward == nextBackward):
                     Connection(road, True).addToForeward(next)
                     Connection(next, True).addToForeward(road)
-                
-
-
-readRoads()
-connectRoads()
-print("Ruas")
-[print(x) for x in Roads]
-
-Player.setStart(Roads[0], 0)
-print("Player")
-print(Player)
 
 def reshape(w,h):
     glViewport(0, 0, w, h)
@@ -106,6 +98,7 @@ def display():
     glColor3f(1.0, 1.0, 0.0)
     for road in Roads: road.render()
     Player.render()
+    for enemy in Enemies: enemy.render()
     glutSwapBuffers()
 
 ESCAPE = b'\x1b'
@@ -127,8 +120,30 @@ def keyboard(*args):
 
 def idle(value):
     Player.move()
+    for enemy in Enemies: enemy.move()
     glutPostRedisplay()
     glutTimerFunc(FPS, idle, value)
+
+
+readRoads()
+connectRoads()
+print("Ruas")
+[print(x) for x in Roads]
+print("-----")
+
+pool = random.sample(range(len(Roads)), ENEMIES + 1)
+random.shuffle(pool)
+
+Player.setStart(Roads[pool.pop()], 0.5)
+print("Player")
+print(Player)
+print("-----")
+
+for enemy in Enemies:
+    enemy.setStart(Roads[pool.pop()], 0.5, random.random() > 0.5)
+print("Enemies")
+[print(x) for x in Enemies]
+print("-----")
 
 glutInit(sys.argv)
 glutInitDisplayMode(GLUT_RGBA)

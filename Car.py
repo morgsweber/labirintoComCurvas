@@ -28,11 +28,14 @@ class Car:
     self.next = None
     self.vertices = copy.deepcopy(CAR_BODY)
     self.position = 0
-    self.speed = SPEED
     self.angle = 0
+    self.speed = 0
+    self.inScene = False
 
-  def setStart(self, road=None, position=0):
+  def setStart(self, road=None, position=0, foreward=True):
+    self.inScene = True
     self.road = road
+    self.speed = SPEED * 1 if foreward else -1
     self.position = position
 
   def setSpeed(self, speed=Speeds.STOP):
@@ -47,8 +50,13 @@ class Car:
       self.speed = -SPEED
 
   def render(self):
-    if(self.type == AIType.PLAYER): glColor3d(0, 1, 0)
-    else: glColor3d(1, 0, 0)
+    if(not self.inScene): return
+
+    if(self.type == AIType.PLAYER): 
+      glColor3d(0, 0.8, 0)
+    else: 
+      glColor3d(0.8, 0, 0)
+
     glPushMatrix()
     point = self.road.getPoint(self.position)
     glTranslate(point.x, point.y, 0)
@@ -66,24 +74,30 @@ class Car:
     glPopMatrix()
 
   def move(self):
-    if(self.speed == 0): 
-      return
+    if(self.speed == 0): return
 
     self.position += self.speed / self.road.length
 
+    # mudança de curva
+    # se esta indo para frente
     if(self.speed > 0):
+      # momento de escolher próxima curva
       if(self.position > 0.5 and self.next == None): 
         self.chooseNext()
       elif(self.position > 1):
+        # momento de mover para próxima curva
         self.road = self.next.road
         self.speed *= self.next.bias
         self.position = 0 if self.next.bias == 1 else 1
         self.next = None
         if(self.type == AIType.PLAYER): self.road.selected = False
+    # se esta indo para tras
     else:
+      # momento de escolher próxima curva
       if(self.position < 0.5 and self.next == None): 
         self.chooseNext()
       elif(self.position < 0):
+        # momento de mover para próxima curva
         self.road = self.next.road
         self.speed *= self.next.bias
         self.position = 1 if self.next.bias == 1 else 0
@@ -128,4 +142,4 @@ class Car:
       self.next.road.selected = True
 
   def __str__(self):
-    return f"Road: {self.road}\nNext: {self.next}\nPosition: {self.position}\nSpeed: {self.speed}\nType: {self.type}"
+    return f"Road: {self.road}\nNext: {self.next}\nPosition: {self.position}\nSpeed: {self.speed}\nType: {self.type}\nAngle: {self.angle}\nInScene: {self.inScene}"
