@@ -28,6 +28,7 @@ class Car:
     self.next = None
     self.vertices = copy.deepcopy(CAR_BODY)
     self.position = 0
+    self.length = 0
     self.angle = 0
     self.speed = 0
     self.inScene = False
@@ -35,7 +36,7 @@ class Car:
   def setStart(self, road=None, position=0, foreward=True):
     self.inScene = True
     self.road = road
-    self.speed = SPEED * 1 if foreward else -1
+    self.speed = SPEED if foreward else -SPEED
     self.position = position
     if(self.type ==  AIType.ENEMY): 
       self.road.cars.add(self)
@@ -79,6 +80,7 @@ class Car:
     if(self.speed == 0): return
 
     self.position += self.speed / self.road.length
+    self.length = self.position * self.road.length
 
     # mudança de curva
     # se esta indo para frente
