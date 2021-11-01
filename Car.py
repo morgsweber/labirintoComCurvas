@@ -31,6 +31,7 @@ class Car:
     self.length = 0
     self.angle = 0
     self.speed = 0
+    self.lastSpeed = 0
     self.inScene = False
 
   def setStart(self, road=None, position=0, foreward=True):
@@ -42,15 +43,19 @@ class Car:
       self.road.cars.add(self)
 
   def setSpeed(self, speed=Speeds.STOP):
-    if(speed == Speeds.STOP):
+    if(speed == Speeds.STOP and self.speed != 0):
+      print("stop player")
+      self.lastSpeed = self.speed
       self.speed = 0
       if(self.next):
         self.next.road.selected = False
         self.next = None
     elif(speed == Speeds.FOREWARD and self.speed == 0):
-      self.speed = SPEED
+      print("player continue movement")
+      self.speed = self.lastSpeed
     elif(speed == Speeds.BACKWARD and self.speed == 0):
-      self.speed = -SPEED
+      self.speed = -self.lastSpeed
+      print("player revert movement")
 
   def setNext(self, connection):
     if(self.type == AIType.PLAYER): 
@@ -133,6 +138,7 @@ class Car:
 
   def cicleRoads(self, clockwise=True):
     if(self.next):
+      print(f"cicle road " + ("" if clockwise else "counter ") + "clockwise")
       current = 0
       size = 0
       if(self.speed > 0):

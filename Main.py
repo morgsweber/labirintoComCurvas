@@ -110,7 +110,6 @@ def checkCollision():
 
 ESCAPE = b'\x1b'
 def keyboard(*args):
-    print(args[0])
     c = args[0]
     if c == ESCAPE:
         os._exit(0)
