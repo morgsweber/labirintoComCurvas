@@ -19,6 +19,7 @@
 # ***********************************************************************************
 
 from OpenGL.GL import *
+from OpenGL.GL.ARB import texture_view
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from Connection import Connection
@@ -28,20 +29,21 @@ from Car import *
 import re
 import random
 
+
 # Limites da Janela de Seleção
-Min = Vector(-50, -50)
-Max = Vector(50, 50)
+Min = Vector(-60, -60)
+Max = Vector(60, 60)
 
 # Setup do jogo
 FPS = math.floor(1000/60)
-ENEMIES = 2
+ENEMIES = 10
 Player = Car(AIType.PLAYER)
 Enemies = [Car() for x in range(ENEMIES)]
 Roads = []
 colisions = 0
 
 def readRoads():
-    infile = open("curvas.txt")
+    infile = open("curves.txt")
 
     for line in infile.readlines():
         points = [Vector(x[1], x[2]) for x in [x.groups() for x in re.finditer('((-*\d+)\,(-*\d+))', line)]]
@@ -107,6 +109,11 @@ def checkCollision():
         global colisions
         colisions += 1
         print(f"colision {colisions}")
+        
+        Player.setSpeed()
+        for enemy in Enemies: enemy.setSpeed()
+        
+
 
 ESCAPE = b'\x1b'
 def keyboard(*args):
