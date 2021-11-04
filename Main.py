@@ -1,25 +1,9 @@
 # ***********************************************************************************
-#   ExibePoligonos.py
-#       Autor: Márcio Sarroglia Pinho
-#       pinho@pucrs.br
-#   Este programa exibe um polígono em OpenGL
-#   Para construir este programa, foi utilizada a biblioteca PyOpenGL, disponível em
-#   http://pyopengl.sourceforge.net/documentation/index.html
-#
-#   Sugere-se consultar também as páginas listadas
-#   a seguir:
-#   http://bazaar.launchpad.net/~mcfletch/pyopengl-demo/trunk/view/head:/PyOpenGL-Demo/NeHe/lesson1.py
-#   http://pyopengl.sourceforge.net/documentation/manual-3.0/index.html#GLUT
-#
-#   No caso de usar no MacOS, pode ser necessário alterar o arquivo ctypesloader.py,
-#   conforme a descrição que está nestes links:
-#   https://stackoverflow.com/questions/63475461/unable-to-import-opengl-gl-in-python-on-macos
-#   https://stackoverflow.com/questions/6819661/python-location-on-mac-osx
-#   Veja o arquivo Patch.rtf, armazenado na mesma pasta deste fonte.
+#   Main.py
+#   Autores: Leonardo Scholler e Morgana Weber
 # ***********************************************************************************
 
 from OpenGL.GL import *
-from OpenGL.GL.ARB import texture_view
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from Connection import ConnectionBackward, ConnectionForeward
@@ -36,7 +20,6 @@ Player = Car(AIType.PLAYER)
 Enemies = [Car() for x in range(ENEMIES)]
 Points = []
 Roads = []
-colisions = 0
 MIN = Vector()
 MAX = Vector()
 
@@ -70,10 +53,10 @@ def readRoads():
     infile.close()
 
 def sortRoadForeward(connection):
-    return -connection.road.tangent(0).getAngle()
+    return connection.road.tangent(0).getAngle()
 
 def sortRoadBackward(connection):
-    return -connection.road.tangent(1).getAngle()
+    return connection.road.tangent(1).getAngle()
 
 def connectRoads():
     # Uma rua é definida como B -> F
@@ -131,12 +114,7 @@ def display():
 
 def checkCollision():
     if(any([abs(car.length - Player.length) < 1 for car in Player.road.cars])):
-        global colisions
-        colisions += 1
-        print(f"colision {colisions}")
-        
-        Player.setSpeed()
-        for enemy in Enemies: enemy.setSpeed()
+        print(f"Colisão detectada, game over")
         os._exit(0)
 
 ESCAPE = b'\x1b'
