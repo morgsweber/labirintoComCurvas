@@ -158,7 +158,7 @@ def keyboard(*args):
 def idle(value):
     Player.move()
     for enemy in Enemies: enemy.move()
-    # checkCollision()
+    checkCollision()
     glutPostRedisplay()
     glutTimerFunc(FPS, idle, value)
 
