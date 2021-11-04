@@ -29,11 +29,6 @@ from Car import *
 import re
 import random
 
-
-# Limites da Janela de Seleção
-Min = Vector(-60, -60)
-Max = Vector(60, 60)
-
 # Setup do jogo
 FPS = math.floor(1000/60)
 ENEMIES = 10
@@ -42,6 +37,22 @@ Enemies = [Car() for x in range(ENEMIES)]
 Points = []
 Roads = []
 colisions = 0
+MIN = Vector()
+MAX = Vector()
+
+# Limites da Janela de Seleção
+def getLimits(points):
+    for point in points:
+        if point.x > MAX.x:
+            MAX.x = point.x
+        if point.y > MAX.y:
+            MAX.y = point.y
+        if point.x < MIN.x:
+            MIN.x = point.x
+        if point.y < MIN.y:
+            MIN.y = point.y
+    print("min ", MIN)
+    print("max ", MAX)
 
 def readRoads():
     infile = open("points.txt")
@@ -49,11 +60,11 @@ def readRoads():
     for line in infile.readlines():
         global Points
         Points += [Vector(x[1], x[2]) for x in [x.groups() for x in re.finditer('((-*\d+)\s(-*\d+))', line)]]
+    getLimits(Points)
 
     infile.close()
 
     infile = open("curves.txt")
-
     for line in infile.readlines():
         global Roads
         Roads += [Road([Points[int(x[0])] for x in [x.groups() for x in re.finditer('(\d+)', line)]])]
@@ -95,9 +106,9 @@ def reshape(w,h):
     glViewport(0, 0, w, h)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    BordaX = abs(Max.x-Min.x)*0.1
-    BordaY = abs(Max.y-Min.y)*0.1
-    glOrtho(Min.x-BordaX, Max.x+BordaX, Min.y-BordaY, Max.y+BordaY, 0.0, 1.0)
+    BordaX = abs(MAX.x-MIN.x)*0.1
+    BordaY = abs(MAX.y-MIN.y)*0.1
+    glOrtho(MIN.x-BordaX, MAX.x+BordaX, MIN.y-BordaY, MAX.y+BordaY, 0.0, 1.0)
     glMatrixMode (GL_MODELVIEW)
     glLoadIdentity()
 
@@ -118,6 +129,7 @@ def checkCollision():
         
         Player.setSpeed()
         for enemy in Enemies: enemy.setSpeed()
+        os._exit(0)
 
 ESCAPE = b'\x1b'
 def keyboard(*args):
