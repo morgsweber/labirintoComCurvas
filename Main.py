@@ -51,8 +51,6 @@ def getLimits(points):
             MIN.x = point.x
         if point.y < MIN.y:
             MIN.y = point.y
-    print("min ", MIN)
-    print("max ", MAX)
 
 def readRoads():
     infile = open("points.txt")
