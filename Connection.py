@@ -1,12 +1,13 @@
-class Connection:
-  def __init__(self, road, inverted=False):
-    self.road = road
+class ConnectionForeward:
+  def __init__(self, current, next, inverted=False):
+    self.road = next
     self.bias = -1 if inverted else 1
-    
-  def addToForeward(self, road):
-    if(all([self.road != connection.road for connection in road.connectedForeward])):
-      road.connectedForeward += [self]
+    if(all([self.road != connection.road for connection in current.connectedForeward])):
+      current.connectedForeward += [self]
 
-  def addToBackward(self, road):
-    if(all([self.road != connection.road for connection in road.connectedBackward])):
-      road.connectedBackward += [self]
+class ConnectionBackward:
+  def __init__(self, current, next, inverted=False):
+    self.road = next
+    self.bias = -1 if inverted else 1
+    if(all([self.road != connection.road for connection in current.connectedBackward])):
+      current.connectedBackward += [self]

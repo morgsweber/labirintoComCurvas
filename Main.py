@@ -22,7 +22,7 @@ from OpenGL.GL import *
 from OpenGL.GL.ARB import texture_view
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-from Connection import Connection
+from Connection import ConnectionBackward, ConnectionForeward
 from Poligonos import *
 from Road import *
 from Car import *
@@ -39,51 +39,57 @@ FPS = math.floor(1000/60)
 ENEMIES = 10
 Player = Car(AIType.PLAYER)
 Enemies = [Car() for x in range(ENEMIES)]
+Points = []
 Roads = []
 colisions = 0
 
 def readRoads():
+    infile = open("points.txt")
+
+    for line in infile.readlines():
+        global Points
+        Points += [Vector(x[1], x[2]) for x in [x.groups() for x in re.finditer('((-*\d+)\s(-*\d+))', line)]]
+
+    infile.close()
+
     infile = open("curves.txt")
 
     for line in infile.readlines():
-        points = [Vector(x[1], x[2]) for x in [x.groups() for x in re.finditer('((-*\d+)\,(-*\d+))', line)]]
-        rua = Road(points)
         global Roads
-        Roads += [rua]
+        Roads += [Road([Points[int(x[0])] for x in [x.groups() for x in re.finditer('(\d+)', line)]])]
 
     infile.close()
 
 def connectRoads():
-    for road in Roads:
-        foreward = road.lastPoint()
-        backward = road.firstPoint()
+    # Uma rua é definida como B -> F
+    # Rua C
+    for current in Roads:
+        foreward = current.lastPoint()
+        backward = current.firstPoint()
+        # Rua N
         for next in Roads:
-            if(road != next):
-                nextForeward = next.lastPoint()
-                nextBackward = next.firstPoint()
-                # if found --> O --> (saída de um para entrada de outro)
-                # addiciona conexões convencionais para ambas ruas
-                if(foreward == nextBackward):
-                    Connection(road).addToBackward(next)
-                    Connection(next).addToForeward(road)
+            nextForeward = next.lastPoint()
+            nextBackward = next.firstPoint()
+            # Caso C --> --> N: CF[N], NB[C]
+            if(foreward == nextBackward):
+                ConnectionForeward(current, next)
+                ConnectionBackward(next, current)
 
-                # if found --> O <-- (saída de um para saída de outro)
-                # addiciona conexões invertidas para ambas ruas
+            # Caso C <-- <-- N: CB[N], NF[C]
+            if(backward == nextForeward):
+                ConnectionBackward(current, next)
+                ConnectionForeward(next, current)
+
+            if(current != next):
+                # Caso C --> <-- N: CF[-N], NF[-C]
                 if(foreward == nextForeward):
-                    Connection(road, True).addToBackward(next)
-                    Connection(next, True).addToBackward(road)
-                    
-                # if found <-- O <-- (entrada de um para saída de outro)
-                # addiciona conexões convencionais para ambas ruas
-                if(backward == nextForeward):
-                    Connection(road).addToForeward(next)
-                    Connection(next).addToBackward(road)
+                    ConnectionForeward(current, next, True)
+                    ConnectionForeward(next, current, True)
 
-                # if found <-- O --> (entrada de um para entrada de outro)
-                # addiciona conexões invertidas para ambas ruas
+                # Caso C <-- --> N: CB[-N], NB[-C]
                 if(backward == nextBackward):
-                    Connection(road, True).addToForeward(next)
-                    Connection(next, True).addToForeward(road)
+                    ConnectionBackward(current, next, True)
+                    ConnectionBackward(next, current, True)
 
 def reshape(w,h):
     glViewport(0, 0, w, h)
@@ -112,8 +118,6 @@ def checkCollision():
         
         Player.setSpeed()
         for enemy in Enemies: enemy.setSpeed()
-        
-
 
 ESCAPE = b'\x1b'
 def keyboard(*args):
@@ -139,10 +143,12 @@ def idle(value):
     glutTimerFunc(FPS, idle, value)
 
 readRoads()
-connectRoads()
+print("Pontos")
+[print(x) for x in Points]
 print("Ruas")
 [print(x) for x in Roads]
 print("-----")
+connectRoads()
 
 pool = random.sample(range(len(Roads)), ENEMIES + 1)
 random.shuffle(pool)
