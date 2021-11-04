@@ -69,6 +69,12 @@ def readRoads():
 
     infile.close()
 
+def sortRoadForeward(connection):
+    return -connection.road.tangent(0).getAngle()
+
+def sortRoadBackward(connection):
+    return -connection.road.tangent(1).getAngle()
+
 def connectRoads():
     # Uma rua é definida como B -> F
     # Rua C
@@ -99,6 +105,10 @@ def connectRoads():
                 if(backward == nextBackward):
                     ConnectionBackward(current, next, True)
                     ConnectionBackward(next, current, True)
+
+    for road in Roads:
+        road.connectedForeward.sort(key=sortRoadForeward)
+        road.connectedBackward.sort(key=sortRoadBackward)
 
 def reshape(w,h):
     glViewport(0, 0, w, h)
@@ -148,7 +158,7 @@ def keyboard(*args):
 def idle(value):
     Player.move()
     for enemy in Enemies: enemy.move()
-    checkCollision()
+    # checkCollision()
     glutPostRedisplay()
     glutTimerFunc(FPS, idle, value)
 

@@ -80,8 +80,8 @@ class Car:
     glScale(SIZE, SIZE, 1)
 
     if(self.speed != 0):
-      direction = self.road.tangent(self.position)
-      self.angle = -math.degrees(math.atan2(direction.x, direction.y)) + (0 if (self.speed > 0) else 180)
+      direction = self.road.tangent(self.position).getAngle()
+      self.angle = -(direction + (0 if (self.speed > 0) else 180))
     glRotate(self.angle, 0, 0, 1)
 
     glBegin(GL_POLYGON)
@@ -118,8 +118,8 @@ class Car:
 
   def changeRoad(self):
     if(self.type == AIType.ENEMY): 
-      self.next.road.cars.add(self)
       self.road.cars.remove(self)
+      self.next.road.cars.add(self)
 
     self.road = self.next.road
     self.speed *= self.next.bias

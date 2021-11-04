@@ -14,9 +14,8 @@ class Vector:
 	def sub(self, point):
 		return Vector(self.x - point.x, self.y - point.y)
 
-	def normalize(self):
-		distance = math.hypot(self.x, self.y)
-		return Vector(self.x/distance, self.y/distance)
+	def getAngle(self):
+		return math.degrees(math.atan2(self.x, self.y))
 
 	def distance(self, point):
 		return math.sqrt((self.x - point.x)**2 + (self.y - point.y)**2)
